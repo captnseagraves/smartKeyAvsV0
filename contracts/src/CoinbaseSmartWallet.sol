@@ -12,6 +12,11 @@ import {WebAuthn} from "webauthn-sol/WebAuthn.sol";
 import {ERC1271} from "./ERC1271.sol";
 import {MultiOwnable} from "./MultiOwnable.sol";
 
+///TODO 
+/// 1. If msg.sender is not in multiOwner, query KeyStoreServiceManager and set keeper to watch for operator response,
+/// if msg.sender is owner then update multiOwner and call original function 
+///     - either user could pay for operations up front or a paymaster could pay for key management
+
 /// @title Coinbase Smart Wallet
 ///
 /// @notice ERC-4337-compatible smart account, based on Solady's ERC4337 account implementation
