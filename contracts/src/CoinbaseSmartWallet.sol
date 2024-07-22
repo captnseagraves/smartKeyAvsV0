@@ -17,6 +17,10 @@ import {MultiOwnable} from "./MultiOwnable.sol";
 /// if msg.sender is owner then update multiOwner and call original function 
 ///     - either user could pay for operations up front or a paymaster could pay for key management
 
+/// OR
+/// Anytime an address is added or removed the AVS is called which then triggers keepers on other networks to update other instances. Paymaster can pay for gas. 
+/// Keepers are deployed at the time of multiOwner. MultiOwnerKeeper, which maintains multiOwnerKeys, and AVS is trusted source for cross chain data transfer. 
+
 /// @title Coinbase Smart Wallet
 ///
 /// @notice ERC-4337-compatible smart account, based on Solady's ERC4337 account implementation
