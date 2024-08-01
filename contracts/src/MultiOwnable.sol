@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
+import {IKeyStoreServiceManager} from "./IKeyStoreServiceManager.sol";
+
 /// @dev this contract will will be deployed with a smart wallet on a canon chain. 
 ///      we need to add functionality so that an AVS can query if an address is an owner of the smart wallet
 
@@ -40,6 +42,9 @@ contract MultiOwnable {
     ///      Follows ERC-7201 (see https://eips.ethereum.org/EIPS/eip-7201).
     bytes32 private constant MUTLI_OWNABLE_STORAGE_LOCATION =
         0x97e2c6aad4ce5d562ebfaa00db6b9e0fb66ea5d8162ed5b243f51a2e03086f00;
+
+    /// @dev The address of the KeyStoreAVS contract.
+    address private KEY_STORE_AVS;
 
     /// @notice Thrown when the `msg.sender` is not an owner and is trying to call a privileged function.
     error Unauthorized();
@@ -98,6 +103,13 @@ contract MultiOwnable {
         _;
     }
 
+    /// @notice Updates the KeyStoreAVS address.
+    ///
+    /// @param keyStoreAVS The new KeyStoreAVS address.
+    function updateKeyStoreAVS(address keyStoreAVS) external onlyOwner {
+        KEY_STORE_AVS = keyStoreAVS;
+    }
+
     /// @notice Adds a new Ethereum-address owner.
     ///
     /// @param owner The owner address.
@@ -152,8 +164,15 @@ contract MultiOwnable {
     ///
     /// @return `true` if the account is an owner else `false`.
     function isOwnerAddress(address account) public view virtual returns (bool) {
-        return _getMultiOwnableStorage().isOwner[abi.encode(account)];
+        bool isOwner = _getMultiOwnableStorage().isOwner[abi.encode(account)];
+        if (isOwner) {
+            return true;
+        } else {
+            IKeyStoreServiceManager(KEY_STORE_AVS).isOwnerAddressRequest(address(this), account);
+        }
     }
+
+    /// TODO Add hook for paymaster to run function once isOwnerAddressResponse threshold is reached
 
     /// @notice Checks if the given `x`, `y` public key is registered as owner.
     ///
@@ -229,6 +248,8 @@ contract MultiOwnable {
         }
         $.nextOwnerIndex = nextOwnerIndex_;
     }
+
+
 
     /// @notice Adds an owner at the given `index`.
     ///

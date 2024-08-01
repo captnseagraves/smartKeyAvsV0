@@ -3,14 +3,14 @@ pragma solidity ^0.8.9;
 
 interface IKeyStoreServiceManager {
     // EVENTS
-    event NewIsOwnerPublicKeyRequest(uint32 indexed taskIndex, Task task);
+    event NewIsOwnerAddressRequest(uint32 indexed taskIndex, Task task);
 
-    event IsOwnerPublicKeyResponse(uint32 indexed taskIndex, Task task, bool isOwner, address operator, bytes signature);
+    event IsOwnerAddressResponse(uint32 indexed taskIndex, Task task, bool isOwner, address operator, bytes signature);
 
     // STRUCTS
     struct Task {
         address smartWalletAddress;
-        address publicKey;
+        address ownerAddress;
         uint32 taskCreatedBlock;
     }
 
@@ -18,10 +18,10 @@ interface IKeyStoreServiceManager {
     /// @notice Checks if a public key is an owner of a smart wallet.
     /// @dev This function creates a new isOwnerPublicKey task and assigns it a taskId
     /// @param smartWalletAddress The address of the smart wallet.
-    /// @param publicKey The public key to check.
-    function isOwnerPublicKeyRequest(
+    /// @param ownerAddress The address of the owner to check.
+    function isOwnerAddressRequest(
         address smartWalletAddress,
-        address publicKey    
+        address ownerAddress    
     ) external;
 
     /// @notice Responds to a isOwnerPublicKey task.
@@ -30,7 +30,7 @@ interface IKeyStoreServiceManager {
     /// @param isOwner The result of the task.
     /// @param referenceTaskIndex The index of the task to respond to.
     /// @param signature The signature of the operator.
-    function isOwnerPublicKeyResponse(
+    function isOwnerAddressResponse(
         Task calldata task,
         bool isOwner,
         uint32 referenceTaskIndex,

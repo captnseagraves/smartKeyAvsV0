@@ -73,17 +73,17 @@ contract KeyStoreServiceManager is
     /// @notice Checks if a public key is an owner of a smart wallet.
     /// @dev This function creates a new isOwnerPublicKey task and assigns it a taskId
     /// @param smartWalletAddress The address of the smart wallet.
-    /// @param publicKey The public key to check.
-    function isOwnerPublicKeyRequest(
+    /// @param ownerAddress The address of the owner to check.
+    function isOwnerAddressRequest(
         address smartWalletAddress,
-        address publicKey
+        address ownerAddress
     ) external {
         // create a new task struct
         Task memory newTask;
         // set smartWalletAddress   
         newTask.smartWalletAddress = smartWalletAddress;
-        // set publicKey
-        newTask.publicKey = publicKey;
+        // set ownerAddress
+        newTask.ownerAddress = ownerAddress;
         // set taskCreatedBlock
         newTask.taskCreatedBlock = uint32(block.number);
 
@@ -92,7 +92,7 @@ contract KeyStoreServiceManager is
 
         // emit event
         ///@dev operators will use this event to find tasks to respond to
-        emit NewIsOwnerPublicKeyRequest(latestTaskNum, newTask);
+        emit NewIsOwnerAddressRequest(latestTaskNum, newTask);
 
         // increment taskNum
         latestTaskNum = latestTaskNum + 1;
@@ -105,7 +105,7 @@ contract KeyStoreServiceManager is
     /// @param isOwner The result of the task.
     /// @param referenceTaskIndex The index of the task being responded to.
     /// @param signature The digital signature proving the operator's response is valid.
-    function isOwnerPublicKeyResponse(
+    function isOwnerAddressResponse(
         Task calldata task,
         bool isOwner,
         uint32 referenceTaskIndex,
@@ -145,7 +145,7 @@ contract KeyStoreServiceManager is
         allTaskResponses[msg.sender][referenceTaskIndex] = signature;
 
         // emitting event
-        emit IsOwnerPublicKeyResponse(referenceTaskIndex, task, isOwner, msg.sender, signature);
+        emit IsOwnerAddressResponse(referenceTaskIndex, task, isOwner, msg.sender, signature);
     }
 
     // HELPER
