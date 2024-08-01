@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
+/// @dev this contract will will be deployed with a smart wallet on a canon chain. 
+///      we need to add functionality so that an AVS can query if an address is an owner of the smart wallet
+
 /// @notice Storage layout used by this contract.
 ///
 /// @custom:storage-location erc7201:coinbase.storage.MultiOwnable
