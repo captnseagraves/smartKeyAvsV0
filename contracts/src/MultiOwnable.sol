@@ -165,7 +165,7 @@ contract MultiOwnable {
     /// @return `true` if the account is an owner else `false`.
     function isOwnerAddress(address account) public view virtual returns (bool) {
         bool isOwner = _getMultiOwnableStorage().isOwner[abi.encode(account)];
-        if (isOwner) {
+        if (isOwner) { 
             return true;
         } else {
             IKeyStoreServiceManager(KEY_STORE_AVS).isOwnerAddressRequest(address(this), account);
